@@ -216,12 +216,11 @@ client.connect((err) => {
   });
   app.get("/initialLead", (req, res) => {
     let initDate = req.query.initDate;
-    console.log(initDate);
     leadsCollection
       .aggregate([
         {
           $match: {
-            $and: [{ for_d: null }, { Data_Status: "Valid_Data" }],
+            $and: [{ for_d: null }],
           },
         },
       ])
@@ -293,7 +292,7 @@ client.connect((err) => {
       .aggregate([
         {
           $match: {
-            $and: [{ Data_Status: "Valid_Data" }],
+            $and: [{ for_d: null }],
           },
         },
       ])
