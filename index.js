@@ -15,9 +15,9 @@ const port = 6010;
 
 const MongoClient = require("mongodb").MongoClient;
 // const MongoClient = require("mongodb").MongoClient;
-// const uri = "mongodb://127.0.0.1:27017/eas_bandhan";
-const uri =
-  "mongodb+srv://aktcl:01939773554op5t@cluster0.9akoo.mongodb.net/eas_bandhan?retryWrites=true&w=majority";
+const uri = "mongodb://127.0.0.1:27017/eas_bandhan";
+// const uri =
+//   "mongodb+srv://aktcl:01939773554op5t@cluster0.9akoo.mongodb.net/eas_bandhan?retryWrites=true&w=majority";
 const client = new MongoClient(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -221,11 +221,7 @@ client.connect((err) => {
       .aggregate([
         {
           $match: {
-            $and: [
-              { for_d: null },
-              { Data_Status: "Valid_Data" },
-              { data_date: initDate },
-            ],
+            $and: [{ for_d: null }, { Data_Status: "Valid_Data" }],
           },
         },
       ])
@@ -234,7 +230,7 @@ client.connect((err) => {
         let users = _.groupBy(
           JSON.parse(JSON.stringify(results)),
           function (d) {
-            return d.ba_id;
+            return d.outlet_code;
           }
         );
         for (user in users) {
@@ -244,12 +240,7 @@ client.connect((err) => {
             // countByUser: users[user].length,
             initLeads: users[user].slice(0, 10).map((d) => {
               let datas = {};
-              (datas.id = d._id),
-                (datas.diid = d.diid),
-                (datas.Territory = d.Territory),
-                (datas.data_date = d.data_date),
-                (datas.r_name = d.r_name),
-                (datas.Consumer_No = d.Consumer_No);
+              (datas.diid = d.diid), (datas.Consumer_No = d.Consumer_No);
               return datas;
             }),
           });
@@ -302,7 +293,7 @@ client.connect((err) => {
       .aggregate([
         {
           $match: {
-            $and: [{ Data_Status: "Valid_Data" }, { data_date: regenDate }],
+            $and: [{ Data_Status: "Valid_Data" }],
           },
         },
       ])
@@ -311,7 +302,7 @@ client.connect((err) => {
         let users = _.groupBy(
           JSON.parse(JSON.stringify(results)),
           function (d) {
-            return d.ba_id;
+            return d.outlet_code;
           }
         );
         for (user in users) {
@@ -330,18 +321,15 @@ client.connect((err) => {
               )
               .slice(
                 0,
-                users[user].filter((x) => x.answer4 === "yes").length < 10
+                users[user].filter(
+                  (x) => x.answer1 === "yes" || x.answer1 === "no"
+                ).length < 10
                   ? 11 - users[user].filter((x) => x.answer4 === "yes").length
                   : 0
               )
               .map((d) => {
                 let datas = {};
-                (datas.id = d._id),
-                  (datas.diid = d.diid),
-                  (datas.Territory = d.Territory),
-                  (datas.data_date = d.data_date),
-                  (datas.r_name = d.r_name),
-                  (datas.Consumer_No = d.Consumer_No);
+                (datas.diid = d.diid), (datas.Consumer_No = d.Consumer_No);
                 return datas;
               }),
           });
