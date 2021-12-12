@@ -239,7 +239,8 @@ client.connect((err) => {
             // countByUser: users[user].length,
             initLeads: users[user].slice(0, 10).map((d) => {
               let datas = {};
-              (datas.diid = d.diid),
+              (datas.id = d._id),
+                (datas.diid = d.diid),
                 (datas.Consumer_No = d.Consumer_No),
                 (datas.outlet_code = d.outlet_code);
               return datas;
@@ -330,7 +331,8 @@ client.connect((err) => {
               )
               .map((d) => {
                 let datas = {};
-                (datas.diid = d.diid),
+                (datas.id = d._id),
+                  (datas.diid = d.diid),
                   (datas.Consumer_No = d.Consumer_No),
                   (datas.outlet_code = d.outlet_code);
                 return datas;
